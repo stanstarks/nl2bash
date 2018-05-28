@@ -8,4 +8,4 @@ setup:
 	tar xf nlp_tools/spellcheck/most_common.tar.xz --directory nlp_tools/spellcheck/
 	
 	# Install Python packages
-	pip3 install -r requirements.txt
+	pip install -r requirements.txt

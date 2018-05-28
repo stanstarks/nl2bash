@@ -73,3 +73,7 @@ data/bash/*
 parsers/test_data/*
 *.cm*
 *.nl*
+
+# models
+model/seq2seq/*
+.python-version

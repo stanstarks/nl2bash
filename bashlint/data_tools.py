@@ -254,7 +254,7 @@ def ast2template(node, loose_constraints=False, ignore_flag_order=False,
     argument types flags are alphabetically ordered.
     """
     tokens = ast2tokens(node, loose_constraints, ignore_flag_order,
-                        arg_type_only=arg_type_only, 
+                        arg_type_only=arg_type_only,
                         indexing_args=indexing_args)
     return ' '.join(tokens) 
 
@@ -383,6 +383,10 @@ def test_bash_parser():
     while True:
         try:
             cmd = input("> ")
+            tokens = bash_tokenizer(cmd, recover_quotation=True, loose_constraints=False,
+                                    ignore_flag_order=False, arg_type_only=False, with_flag_head=True,
+                                    with_flag_argtype=True, with_prefix=False, verbose=False)
+            print(tokens)
             norm_tree = bash_parser(cmd)
             # pruned_tree = normalizer.prune_ast(norm_tree)
             print()

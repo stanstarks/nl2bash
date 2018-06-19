@@ -472,6 +472,10 @@ def prepare_dataset_split(data_dir, split, channel=''):
     if not channel or channel == 'partial.token':
         prepare_channel(data_dir, nl_list, cm_list, split, channel='partial.token',
                         parallel_data_to_tokens=parallel_data_to_partial_tokens)
+    # arg-token based processing
+    if not channel or channel == 'arg.token':
+        prepare_channel(data_dir, nl_list, cm_list, split, channel='arg.token',
+                        parallel_data_to_tokens=parallel_data_to_arg_tokens)
     # token based processing
     if not channel or channel == 'token':
         prepare_channel(data_dir, nl_list, cm_list, split, channel='token',
@@ -505,7 +509,7 @@ def prepare_channel(data_dir, nl_list, cm_list, split, channel,
     if channel == 'char':
         nl_copy_tokens, cm_copy_tokens = nl_tokens, cm_tokens
     else:
-        if channel == 'partial.token':
+        if channel == 'partial.token' or channel == 'arg.token':
             nl_copy_tokens = [nl_to_partial_tokens(nl, tokenizer.basic_tokenizer,
                 to_lower_case=False, lemmatization=False) for nl in nl_list]
         else:
@@ -550,6 +554,12 @@ def parallel_data_to_characters(nl_list, cm_list):
 def parallel_data_to_partial_tokens(nl_list, cm_list):
     nl_data = [nl_to_partial_tokens(nl, tokenizer.basic_tokenizer) for nl in nl_list]
     cm_data = [cm_to_partial_tokens(cm, data_tools.bash_tokenizer) for cm in cm_list]
+    return nl_data, cm_data
+
+
+def parallel_data_to_arg_tokens(nl_list, cm_list):
+    nl_data = [nl_to_partial_tokens(nl, tokenizer.basic_tokenizer) for nl in nl_list]
+    cm_data = [cm_to_partial_tokens(cm, data_tools.bash_tokenizer, with_flag_head=True) for cm in cm_list]
     return nl_data, cm_data
 
 
@@ -623,9 +633,9 @@ def nl_to_partial_tokens(s, tokenizer, to_lower_case=True, lemmatization=True):
                      lemmatization=lemmatization), use_arg_start_end=False)
 
 
-def cm_to_partial_tokens(s, tokenizer):
+def cm_to_partial_tokens(s, tokenizer, with_flag_head=False):
     s = data_tools.correct_errors_and_normalize_surface(s)
-    return string_to_partial_tokens(cm_to_tokens(s, tokenizer))
+    return string_to_partial_tokens(cm_to_tokens(s, tokenizer, with_flag_head=with_flag_head))
 
 
 def string_to_partial_tokens(s, use_arg_start_end=True):
@@ -706,14 +716,15 @@ def nl_to_tokens(s, tokenizer, to_lower_case=True, lemmatization=True):
 
 
 def cm_to_tokens(s, tokenizer, loose_constraints=True, arg_type_only=False,
-                 with_prefix=False, with_flag_argtype=True):
+                 with_prefix=False, with_flag_argtype=True, with_flag_head=False):
     """
     Split a command string into a sequence of tokens.
     """
     tokens = tokenizer(s, loose_constraints=loose_constraints,
-                       arg_type_only=arg_type_only, 
+                       arg_type_only=arg_type_only,
                        with_prefix=with_prefix,
-                       with_flag_argtype=with_flag_argtype)
+                       with_flag_argtype=with_flag_argtype,
+                       with_flag_head=with_flag_head)
     return tokens
 
 

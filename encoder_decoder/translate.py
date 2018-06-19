@@ -15,7 +15,7 @@ import sys
 
 if sys.version_info > (3, 0):
     from six.moves import xrange
-    
+
 import math
 import numpy as np
 import pickle
@@ -146,7 +146,104 @@ def train(train_set, test_set):
                 # Early stop if no improvement of dev loss was seen over last 3 checkpoints.
                 if len(previous_dev_losses) > 2 and dev_loss > max(previous_dev_losses[-3:]):
                     break
-           
+
+                previous_dev_losses.append(dev_loss)
+
+                sys.stdout.flush()
+
+        return model
+
+def train_discriminator(train_set, test_set):
+    with tf.Session(config=tf.ConfigProto(allow_soft_placement=True,
+            log_device_placement=FLAGS.log_device_placement)) as sess:
+        # Initialize model parameters
+        model = define_model(sess, forward_only=False, buckets=train_set.buckets)
+
+        train_bucket_sizes = [len(train_set.data_points[b])
+                              for b in xrange(len(train_set.buckets))]
+        for i, bucket in enumerate(train_set.buckets):
+            print('bucket {}: {} ({})'.format(i, bucket, train_bucket_sizes[i]))
+        train_total_size = float(sum(train_bucket_sizes))
+
+        # A bucket scale is a list of increasing numbers from 0 to 1 that we'll
+        # use to select a bucket. Length of [scale[i], scale[i+1]] is
+        # proportional to the size if i-th training bucket, as used later.
+        train_buckets_scale = [sum(train_bucket_sizes[:i+1]) / train_total_size
+                               for i in xrange(len(train_bucket_sizes))]
+
+        loss, dev_loss, epoch_time = 0.0, 0.0, 0.0
+        current_step = 0
+        previous_losses = []
+        previous_dev_losses = []
+
+        for t in xrange(FLAGS.num_epochs):
+            print("Epoch %d" % (t+1))
+
+            # progress bar
+            start_time = time.time()
+            for _ in tqdm(xrange(FLAGS.steps_per_epoch)):
+                time.sleep(0.01)
+                random_number_01 = np.random.random_sample()
+                bucket_id = min([i for i in xrange(len(train_buckets_scale))
+                                 if train_buckets_scale[i] > random_number_01])
+                formatted_example = model.get_batch(train_set.data_points, bucket_id)
+                model_outputs = model.step(
+                    sess, formatted_example, bucket_id, forward_only=False)
+                loss += model_outputs.losses
+                current_step += 1
+            epoch_time = time.time() - start_time
+
+            # Once in a while, we save checkpoint, print statistics, and run evals.
+            if t % FLAGS.epochs_per_checkpoint == 0:
+                # Print statistics for the previous epoch.
+                loss /= FLAGS.steps_per_epoch
+                if loss < 300:
+                    ppx = math.exp(loss)
+                else:
+                    print("Training loss = {} is too large.".format(loss))
+                    if t > 1:
+                        break
+                    else:
+                        raise graph_utils.InfPerplexityError
+                print("learning rate %.4f epoch-time %.4f perplexity %.2f" % (
+                    model.learning_rate.eval(), epoch_time, ppx))
+
+                # Decrease learning rate if no improvement of loss was seen
+                # over last 3 times.
+                if len(previous_losses) > 2 and loss > max(previous_losses[-3:]):
+                    sess.run(model.learning_rate_decay_op)
+                previous_losses.append(loss)
+
+                checkpoint_path = os.path.join(FLAGS.model_dir, "translate.ckpt")
+                # Save checkpoint and reset timer and loss.
+                model.saver.save(
+                    sess, checkpoint_path, global_step=t, write_meta_graph=False)
+
+                epoch_time, loss, dev_loss = 0.0, 0.0, 0.0
+                # Run evals on development set and print the metrics.
+                sample_size = 10
+                repeated_samples = list(range(len(train_set.buckets))) * sample_size
+                for bucket_id in repeated_samples:
+                    if len(test_set.data_points[bucket_id]) == 0:
+                        print("  eval: empty bucket %d" % (bucket_id))
+                        continue
+                    formatted_example = model.get_batch(test_set.data_points, bucket_id)
+                    model_outputs = model.step(
+                        sess, formatted_example, bucket_id, forward_only=True)
+                    eval_loss = model_outputs.losses
+                    dev_loss += eval_loss
+                    eval_ppx = math.exp(eval_loss) if eval_loss < 300 else float('inf')
+                    print("  eval: bucket %d perplexity %.2f" % (bucket_id, eval_ppx))
+                dev_loss = dev_loss / len(repeated_samples)
+
+                dev_perplexity = math.exp(dev_loss) if dev_loss < 1000 else float('inf')
+                print("step %d learning rate %.4f dev_perplexity %.2f"
+                        % (t+1, model.learning_rate.eval(), dev_perplexity))
+
+                # Early stop if no improvement of dev loss was seen over last 3 checkpoints.
+                if len(previous_dev_losses) > 2 and dev_loss > max(previous_dev_losses[-3:]):
+                    break
+
                 previous_dev_losses.append(dev_loss)
 
                 sys.stdout.flush()

@@ -231,6 +231,7 @@ def tabulate_example_predictions(dataset, FLAGS, num_examples=100):
         'token-copynet': 'T-CopyNet',
         'partial.token-seq2seq': 'ST-Seq2Seq',
         'partial.token-copynet': 'ST-CopyNet',
+        'arg.token-copynet': 'ST-CopyNet',
         'char-seq2seq': 'C-Seq2Seq',
         'char-copynet': 'C-CopyNet'
     }
@@ -283,6 +284,7 @@ def tabulate_example_predictions(dataset, FLAGS, num_examples=100):
                            'token-copynet',
                            'partial.token-seq2seq',
                            'partial.token-copynet',
+                           'arg.token-copynet',
                            'tellina']:
             if model_name == 'char-seq2seq':
                 print('\\multirow{{7}}{{*}}{{\\specialcell{{{}}}}} '.format(sc_txt) + output_strs[model_name])

@@ -77,7 +77,7 @@ class EncoderDecoderModel(graph_utils.NNModel):
 
         # Feeds for inputs.
         self.encoder_inputs = []        # encoder inputs.
-        self.encoder_attn_masks = []    # mask out PAD symbols in the encoder
+        self.encoder_attn_masks = []    # mask out PAD symbo ls in the encoder
         self.decoder_inputs = []        # decoder inputs (always start with "_GO").
         self.targets = []               # decoder targets
         self.target_weights = []        # weights at each position of the target sequence.

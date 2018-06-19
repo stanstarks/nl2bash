@@ -219,7 +219,30 @@ def decode(model_outputs, FLAGS, vocabs, sc_fillers=None,
                 if buffer:
                     merged_output_tokens.append(buffer)
                 output_tokens = merged_output_tokens
-    
+
+            if FLAGS.channel == 'arg.token':
+                # process partial-token outputs
+                merged_output_tokens = []
+                buffer = ''
+                load_buffer = False
+                for token in output_tokens:
+                    token = token.split('@@')[-1]
+                    if load_buffer:
+                        if token == data_utils._ARG_END:
+                            merged_output_tokens.append(buffer)
+                            load_buffer = False
+                            buffer = ''
+                        else:
+                            buffer += token
+                    else:
+                        if token == data_utils._ARG_START:
+                            load_buffer = True
+                        else:
+                            merged_output_tokens.append(token)
+                if buffer:
+                    merged_output_tokens.append(buffer)
+                output_tokens = merged_output_tokens
+
             if FLAGS.channel == 'char':
                 target = ''
                 for char in output_tokens:
@@ -426,7 +449,7 @@ def query_to_encoder_features(sentence, vocabs, FLAGS):
     if FLAGS.channel == 'char':
         tokens = data_utils.nl_to_characters(sentence)
         init_vocab = data_utils.CHAR_INIT_VOCAB
-    elif FLAGS.channel == 'partial.token':
+    elif FLAGS.channel == 'partial.token' or FLAGS.channel == 'arg.token':
         tokens = data_utils.nl_to_partial_tokens(sentence, tokenizer.basic_tokenizer)
         init_vocab = data_utils.TOKEN_INIT_VOCAB
     else:
@@ -451,7 +474,7 @@ def query_to_encoder_features(sentence, vocabs, FLAGS):
 def query_to_copy_tokens(sentence, FLAGS):
     if FLAGS.channel == 'char':
         tokens = data_utils.nl_to_characters(sentence)
-    elif FLAGS.channel == 'partial.token':
+    elif FLAGS.channel == 'partial.token' or FLAGS.channel == 'arg.token':
         tokens = data_utils.nl_to_partial_tokens(
             sentence, tokenizer.basic_tokenizer, to_lower_case=False,
             lemmatization=False)

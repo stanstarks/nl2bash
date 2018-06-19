@@ -10,6 +10,7 @@ from tensorflow.python.util import nest
 import tensorflow as tf
 
 from encoder_decoder.graph_utils import nest_map_dual
+from . import rum
 
 
 def create_multilayer_cell(rnn_cell, scope, dim, num_layers,
@@ -45,6 +46,8 @@ def create_multilayer_cell(rnn_cell, scope, dim, num_layers,
             cell = tf.nn.rnn_cell.GRUCell(dim)
         elif rnn_cell == 'ran':
             cell = RANCell(dim)
+        elif rnn_cell == 'rum':
+            cell = rum.RUMCell(dim)
         else:
             raise ValueError("Unrecognized RNN cell type: {}.".format(type))
 
@@ -64,7 +67,8 @@ def create_multilayer_cell(rnn_cell, scope, dim, num_layers,
 
         if num_layers > 1:
             cell = tf.nn.rnn_cell.MultiRNNCell(
-                [cell] * num_layers, state_is_tuple=(rnn_cell=="lstm"))
+                [cell] * num_layers, state_is_tuple=(rnn_cell=="lstm"
+                                                     or rnn_cell=="rum"))
     return cell
 
 

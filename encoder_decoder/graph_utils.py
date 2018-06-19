@@ -184,6 +184,8 @@ def get_decode_signature(FLAGS):
         model_subdir += '--char'
     elif FLAGS.channel == 'partial.token':
         model_subdir += '--partial'
+    elif FLAGS.channel == 'arg.token':
+        model_subdir += '--arg'
     else:
         if FLAGS.sc_token:
             model_subdir += '-T'

@@ -247,7 +247,7 @@ class RNNDecoder(decoder.Decoder):
                 # LSTM: ([batch_size*self.beam_size, :, dim],
                 #        [batch_size*self.beam_size, :, dim])
                 # GRU: [batch_size*self.beam_size, :, dim]
-                if self.rnn_cell == 'lstm':
+                if self.rnn_dec_cell == 'lstm':
                     if self.num_layers == 1:
                         c_states, h_states = past_cell_states
                         states = list(zip(
@@ -267,13 +267,13 @@ class RNNDecoder(decoder.Decoder):
                                                       axis=1)[1:]]))
                             for c_states, h_states in past_cell_states]
                         states = list(zip(layered_states))
-                elif self.rnn_cell in ['gru', 'ran']:
+                elif self.rnn_dec_cell in ['gru', 'ran', 'rum', 'arum']:
                     states = [tf.squeeze(x, axis=[1]) for x in \
                         tf.split(num_or_size_splits=past_cell_states.get_shape()[1],
                                  axis=1, value=past_cell_states)][1:]
                 else:
                     raise AttributeError(
-                        "Unrecognized rnn cell type: {}".format(self.rnn_cell))
+                        "Unrecognized rnn cell type: {}".format(self.rnn_dec_cell))
                 return top_k_osbs, top_k_seq_logits, states, \
                        states, attn_alignments, pointers
             else:
@@ -294,7 +294,7 @@ class RNNDecoder(decoder.Decoder):
             input_size = self.dim
         with tf.variable_scope(self.scope + "_decoder_cell") as scope:
             cell = rnn.create_multilayer_cell(
-                self.rnn_cell, scope, self.dim, self.num_layers,
+                self.rnn_dec_cell, scope, self.dim, self.num_layers,
                 self.input_keep, self.output_keep,
                 variational_recurrent=self.variational_recurrent_dropout,
                 batch_normalization=self.recurrent_batch_normalization,

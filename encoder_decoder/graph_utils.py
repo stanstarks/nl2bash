@@ -22,6 +22,7 @@ def define_model(FLAGS, session, model_constructor, buckets, forward_only):
     params["max_source_token_size"] = FLAGS.max_sc_token_size
     params["max_target_token_size"] = FLAGS.max_tg_token_size
     params["rnn_cell"] = FLAGS.rnn_cell
+    params["rnn_dec_cell"] = FLAGS.rnn_dec_cell
     params["batch_size"] = FLAGS.batch_size
     params["num_layers"] = FLAGS.num_layers
     params["num_samples"] = FLAGS.num_samples
@@ -197,6 +198,7 @@ def get_decode_signature(FLAGS):
     model_subdir += '-{}'.format(FLAGS.min_vocab_frequency)
     model_subdir += '-{}'.format(FLAGS.encoder_topology)
     model_subdir += '-{}'.format(FLAGS.rnn_cell)
+    model_subdir += '-{}'.format(FLAGS.rnn_dec_cell)
     model_subdir += '-{}'.format(FLAGS.training_algorithm)
     if FLAGS.tg_token_use_attention:
         model_subdir += '-attention'
@@ -391,6 +393,10 @@ class NNModel(object):
     @property
     def rnn_cell(self):
         return self.hyperparams["rnn_cell"]
+
+    @property
+    def rnn_dec_cell(self):
+        return self.hyperparams["rnn_dec_cell"]
 
     @property
     def recurrent_batch_normalization(self):

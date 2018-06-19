@@ -5,7 +5,6 @@ export PYTHONPATH=`pwd`'/..'
 ARGS=${@:1}
 
 python3 -m encoder_decoder.translate \
-    --rnn_cell lstm \
     --encoder_topology birnn \
     --num_epochs 100 \
     --num_samples 256 \

@@ -98,6 +98,7 @@ def define_input_flags():
     tf.app.flags.DEFINE_boolean('create_fresh_params', False,
                                 'Set to force remove previously trained models.')
     tf.app.flags.DEFINE_string('rnn_cell', 'gru', 'Type of RNN cell to use.')
+    tf.app.flags.DEFINE_string('rnn_dec_cell', 'gru', 'Type of RNN cell to use.')
     tf.app.flags.DEFINE_string('optimizer', 'adam',
                                'Type of numeric optimization algorithm to use.')
     tf.app.flags.DEFINE_float('learning_rate', 0.001, 'Learning rate.')

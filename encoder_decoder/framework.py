@@ -247,9 +247,18 @@ class EncoderDecoderModel(graph_utils.NNModel):
             attention_states = None
         num_heads = 2 if (self.tg_token_use_attention and self.copynet) else 1
 
+        print('encoder shape:')
+        if self.rnn_dec_cell == 'arum':
+            # append empty assoc_mem
+            Rt = tf.zeros([self.batch_size,
+                           self.encoder.output_dim * self.encoder.output_dim])
+            state_input = tf.concat([Rt, encoder_states[-1]], 1)
+        else:
+            state_input = encoder_states[-1]
+
         output_symbols, sequence_logits, output_logits, states, attn_alignments, \
             pointers = self.decoder.define_graph(
-                        encoder_states[-1], decoder_inputs,
+                        state_input, decoder_inputs,
                         encoder_attn_masks=encoder_attn_masks,
                         attention_states=attention_states,
                         num_heads=num_heads,
@@ -330,6 +339,9 @@ class EncoderDecoderModel(graph_utils.NNModel):
                     top_states.append(state[-1][1])
                 else:
                     top_states.append(state[1])
+        else:
+            for state in states:
+                top_states.append(state[:, -self.decoder.dim:])
         decoder_hidden_states = tf.concat(axis=1,
             values=[tf.reshape(d_o, [-1, 1, self.decoder.dim])
                     for d_o in top_states])

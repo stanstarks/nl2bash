@@ -48,8 +48,10 @@ def create_multilayer_cell(rnn_cell, scope, dim, num_layers,
             cell = RANCell(dim)
         elif rnn_cell == 'rum':
             cell = rum.RUMCell(dim)
+        elif rnn_cell == 'arum':
+            cell = rum.ARUMCell(dim)
         else:
-            raise ValueError("Unrecognized RNN cell type: {}.".format(type))
+            raise ValueError("Unrecognized RNN cell type: {}.".format(rnn_cell))
 
         assert(input_keep_prob >= 0 and output_keep_prob >= 0)
         if input_keep_prob < 1 or output_keep_prob < 1:
@@ -67,8 +69,7 @@ def create_multilayer_cell(rnn_cell, scope, dim, num_layers,
 
         if num_layers > 1:
             cell = tf.nn.rnn_cell.MultiRNNCell(
-                [cell] * num_layers, state_is_tuple=(rnn_cell=="lstm"
-                                                     or rnn_cell=="rum"))
+                [cell] * num_layers, state_is_tuple=(rnn_cell=="lstm"))
     return cell
 
 

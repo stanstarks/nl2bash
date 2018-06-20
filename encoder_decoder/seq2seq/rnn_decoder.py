@@ -267,7 +267,7 @@ class RNNDecoder(decoder.Decoder):
                                                       axis=1)[1:]]))
                             for c_states, h_states in past_cell_states]
                         states = list(zip(layered_states))
-                elif self.rnn_dec_cell in ['gru', 'ran', 'rum', 'arum']:
+                elif self.rnn_dec_cell in ['gru', 'ran', 'rum', 'arum', 'fgru']:
                     states = [tf.squeeze(x, axis=[1]) for x in \
                         tf.split(num_or_size_splits=past_cell_states.get_shape()[1],
                                  axis=1, value=past_cell_states)][1:]

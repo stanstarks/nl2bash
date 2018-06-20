@@ -11,6 +11,7 @@ import tensorflow as tf
 
 from encoder_decoder.graph_utils import nest_map_dual
 from . import rum
+from . import fast_weight
 
 
 def create_multilayer_cell(rnn_cell, scope, dim, num_layers,
@@ -50,6 +51,8 @@ def create_multilayer_cell(rnn_cell, scope, dim, num_layers,
             cell = rum.RUMCell(dim)
         elif rnn_cell == 'arum':
             cell = rum.ARUMCell(dim)
+        elif rnn_cell == 'fgru':
+            cell = fast_weight.FastGRUCell(dim)
         else:
             raise ValueError("Unrecognized RNN cell type: {}.".format(rnn_cell))
 

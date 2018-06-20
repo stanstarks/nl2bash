@@ -1518,7 +1518,7 @@ Display a long listing of all regular files with 0777 permission under current d
 Display a long listing of all the files/directories under current directory tree that are newer than the file 'Nov' by modification time
 Display a long listing of all the regular files in the file system which belong to user 'root' and which have suid bit set
 Display a long listing of all the regular files owned by the user 'bluher' in the entire filesystem
-Display a long listing of all the regular files under current directory tree that are newer than ‘Apr 18 23:59:59 EDT 2013’ and older than ‘Apr 20 00:00:00 EDT 2013’ by modification time
+Display a long listing of all the regular files under current directory tree that are newer than 'Apr 18 23:59:59 EDT 2013' and older than 'Apr 20 00:00:00 EDT 2013' by modification time
 Display a long listing of the files/directories with human readable sizes (100M, 10G etc..) under '/var' directory tree which are bigger than 10MB
 Display a long listing of the oldest file under '/hom/backups' directory tree
 Display a named character dump of "test.sh"
@@ -1664,7 +1664,7 @@ Display variable 'var' without leading and trailing whitespace.
 Display what flags mount points are mounted with
 Display which package the command "command" belongs to in dpkg
 Display who is logged on and what they are doing
-Displays Homebrew’s install path.
+Displays Homebrew's install path.
 Displays a tree of all process alongside their command line arguments.
 Displays calendar for a previous, current and next month.
 Displays calendar of a previous, current and next month for December of 2120 year.
@@ -3717,8 +3717,8 @@ Find all text files in the home directory
 Find all the *.c files at any level of directory Programming under any 'src' directory
 Find all the *.pl files (Perl files) beneath the current directory.
 Find all the *.txt files in the current directory older than 48 hours
-Find all the .c files in the current directory tree that contain the string ‘stdlib.h’
-Find all the .c files in the current directory tree that contain the string ‘stdlib.h’
+Find all the .c files in the current directory tree that contain the string 'stdlib.h'
+Find all the .c files in the current directory tree that contain the string 'stdlib.h'
 Find all the .mp3 files in the music folder and pass to the ls command, -print0 is required if any filenames contain whitespace
 Find all the .mp3 files in the music folder recursively and pass them to the ls command
 Find all the SGID bit files under current directory whose permissions set to 644 and show a few lines of output from the beginning
@@ -4070,7 +4070,7 @@ Find files that are writable by the user, the group, or both under the current d
 Find files that are writable by the user, the group, or both under the plsql directory
 Find files that are writable by the user, the group, or both under the plsql directory
 Find files that do not have a listing in the /etc/passwd or /etc/group in the file system
-Find files that don’t have 644 permissions
+Find files that don't have 644 permissions
 Find files that end in ".gz" and execute "awk -F, '$1 ~ /F$/'" on their unzipped contents
 Find files that have a modification time of a day ago
 Find files that have been modified within the last month and copy them somewhere
@@ -4226,7 +4226,7 @@ Find out all hard links in the /home directory to file1
 Find out if there are any files on the system owned by user `account'
 Find process "terminal" displaying the searching process
 Find recursively all Emacs backup files in the current directory and remove them
-Find recursively all Python files in the current directory and search them for the word ‘import’
+Find recursively all Python files in the current directory and search them for the word 'import'
 Find recursively all Python files in the current directory tree and count the number of lines in them
 Find recursively all empty directories in the current directory
 Find recursively all empty directories in the current directory
@@ -8440,7 +8440,7 @@ Search for 'string_to_find' in all files under current directory
 Search for 'stuff' in all *,txt files under current directory
 Search for 'text' in all regular files under current directory tree
 Search for 'whatIWantToFind' in all files under current directory
-Search for '“foobar”' in all files starting with '‘' and ending with '’' and contain '.' in their names in the entire filesystem and display only the matched files
+Search for '“foobar”' in all files starting with ''' and ending with ''' and contain '.' in their names in the entire filesystem and display only the matched files
 Search for *pattern* in and below current directory
 Search for .bam files anywhere in the current directory recursively
 Search for .pdf files
@@ -9441,7 +9441,7 @@ Subtract each column in File2 from matching column in File1, output the result i
 Suffix all files and folders in the current directory with "_SUF"
 Sum the total content size of the extracted files in "archive.tar.gz"
 Swap "new" and "old" files or directories
-Symlinks all of formula’s installed files into the Homebrew prefix.
+Symlinks all of formula's installed files into the Homebrew prefix.
 Symlinks all of package`s installed files into the Homebrew prefix with overwrite.
 Synchronize "/home/user1/" to "wobgalaxy02:/home/user1/" including hidden files
 Synchronize "/path/to/dir_a" with files in "/path/to/dir_b/" if the files are newer
@@ -11579,8 +11579,8 @@ find files in the current directory and sub-directories, that changed within las
 find files in the current directory and sub-directories, that were accessed within last hour
 find files in the current directory and sub-directories, whose content was updated within the last hour
 find files in the current directory having name "filename"
-find files in the current directory with pattern` '*.[ch]' which are contain ‘thing’ string and print file names
-find files in the current directory with pattern` '*.[ch]' which are contain ‘thing’ string and print file names which can contain spaces
+find files in the current directory with pattern` '*.[ch]' which are contain 'thing' string and print file names
+find files in the current directory with pattern` '*.[ch]' which are contain 'thing' string and print file names which can contain spaces
 find files in the home folder which have been modified in the last day. ( -daystart measures times from the beginning of today rather than from 24 hours ago.)
 find files in the users home directory and for each one, ask the user to confirm to delete the file.
 find files under the current directory called "foo" or "bar"
@@ -11899,7 +11899,7 @@ prints the last non-empty line of a file
 prints the last occurrence of text between two tags
 prints the maven project version
 prints the name of the current git branch
-prints the names of all files in the directory tree rooted in /usr/src whose name ends with ‘.c’ and that are larger than 100 Kilobytes.
+prints the names of all files in the directory tree rooted in /usr/src whose name ends with '.c' and that are larger than 100 Kilobytes.
 prints top 10 commands used
 prints top 10 processes sorted by memory usage
 prune all the files in the current directory, only current directory (.) is the output
